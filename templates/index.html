@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered disease prediction system. Select your symptoms to get instant disease predictions with confidence scores.">
+    <title>Disease Prediction — AI Health Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__icon">🏥</div>
+            <h1 class="header__title">Disease Prediction</h1>
+            <p class="header__subtitle">Select your symptoms below and let our AI model predict possible conditions</p>
+        </header>
+
+        <!-- Main Form -->
+        <form method="POST" action="/predict" id="predictionForm">
+            <div class="glass-card">
+
+                <!-- Error Alert -->
+                {% if error %}
+                <div class="alert alert--error">
+                    ⚠️ {{ error }}
+                </div>
+                {% endif %}
+
+                <!-- Search -->
+                <div class="search-box">
+                    <span class="search-box__icon">🔍</span>
+                    <input
+                        type="text"
+                        class="search-box__input"
+                        id="symptomSearch"
+                        placeholder="Search symptoms... (e.g. headache, fever, cough)"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="symptom-stats">
+                    <span>
+                        <span class="symptom-stats__count" id="selectedCount">0</span> symptoms selected
+                    </span>
+                    <span>
+                        <span id="visibleCount">{{ symptoms|length }}</span> / {{ symptoms|length }} shown
+                    </span>
+                </div>
+
+                <!-- Selected Tags -->
+                <div class="selected-tags" id="selectedTags"></div>
+
+                <!-- Symptom Grid -->
+                <div class="symptom-grid" id="symptomGrid">
+                    {% for symptom in symptoms %}
+                    <div class="symptom-chip" data-label="{{ symptom.label|lower }}">
+                        <input
+                            type="checkbox"
+                            name="symptoms"
+                            value="{{ symptom.value }}"
+                            id="symptom_{{ loop.index }}"
+                        >
+                        <label class="symptom-chip__label" for="symptom_{{ loop.index }}">
+                            <span class="symptom-chip__check">✓</span>
+                            {{ symptom.label }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Submit -->
+                <div class="btn-row">
+                    <button type="button" class="btn btn--ghost" id="clearBtn">
+                        ✕ Clear All
+                    </button>
+                    <button type="submit" class="btn btn--primary" id="predictBtn">
+                        🔬 Predict Disease
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Disease Prediction System — Powered by Machine Learning</p>
+        </footer>
+    </div>
+
+    <script>
+        const searchInput  = document.getElementById('symptomSearch');
+        const grid         = document.getElementById('symptomGrid');
+        const chips        = grid.querySelectorAll('.symptom-chip');
+        const selectedTags = document.getElementById('selectedTags');
+        const countEl      = document.getElementById('selectedCount');
+        const visibleEl    = document.getElementById('visibleCount');
+        const clearBtn     = document.getElementById('clearBtn');
+
+        // ── Search filter ────────────────────────────────────
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
+            let visible = 0;
+            chips.forEach(chip => {
+                const label = chip.dataset.label;
+                const match = !query || label.includes(query);
+                chip.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            visibleEl.textContent = visible;
+        });
+
+        // ── Selection tracking ───────────────────────────────
+        function updateSelection() {
+            const checked = grid.querySelectorAll('input:checked');
+            countEl.textContent = checked.length;
+
+            // Rebuild tags
+            selectedTags.innerHTML = '';
+            checked.forEach(cb => {
+                const label = cb.nextElementSibling.textContent.trim();
+                const tag = document.createElement('span');
+                tag.className = 'selected-tag';
+                tag.innerHTML = `${label} <span class="selected-tag__remove" data-id="${cb.id}">✕</span>`;
+                selectedTags.appendChild(tag);
+            });
+
+            // Tag removal
+            selectedTags.querySelectorAll('.selected-tag__remove').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const cb = document.getElementById(btn.dataset.id);
+                    if (cb) { cb.checked = false; updateSelection(); }
+                });
+            });
+        }
+
+        grid.addEventListener('change', updateSelection);
+
+        // ── Clear all ────────────────────────────────────────
+        clearBtn.addEventListener('click', () => {
+            grid.querySelectorAll('input:checked').forEach(cb => cb.checked = false);
+            updateSelection();
+        });
+    </script>
+</body>
+</html>

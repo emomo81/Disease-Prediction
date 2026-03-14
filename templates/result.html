@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Disease prediction results based on your symptoms.">
+    <title>Prediction Results — Disease Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__icon">🔬</div>
+            <h1 class="header__title">Prediction Results</h1>
+            <p class="header__subtitle">Based on the symptoms you selected, here are the most likely conditions</p>
+        </header>
+
+        <!-- Selected Symptoms Summary -->
+        <div class="results-header">
+            <div class="results-header__badge">
+                ✅ Analysis Complete — {{ selected_symptoms|length }} symptom{{ 's' if selected_symptoms|length > 1 else '' }} analyzed
+            </div>
+            <div class="selected-symptoms-list">
+                {% for s in selected_symptoms %}
+                <span class="symptom-badge">{{ s }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Result Cards -->
+        <div class="result-cards">
+            {% for result in results %}
+            <div class="result-card">
+                <div class="result-card__header">
+                    <div class="result-card__rank">#{{ loop.index }}</div>
+                    <div class="result-card__name">{{ result.name }}</div>
+                    <div class="result-card__confidence">{{ result.confidence }}%</div>
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-bar__fill" style="width: {{ result.confidence }}%"></div>
+                </div>
+                <p class="result-card__description">{{ result.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="disclaimer">
+            <span class="disclaimer__icon">⚠️</span>
+            <div class="disclaimer__text">
+                <strong>Medical Disclaimer:</strong> This tool is for informational purposes only and should not be
+                used as a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice
+                of your physician or other qualified health provider with any questions you may have regarding a
+                medical condition.
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="btn-row">
+            <a href="/" class="btn btn--primary">🔄 Try Again</a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Disease Prediction System — Powered by Machine Learning</p>
+        </footer>
+    </div>
+
+</body>
+</html>
