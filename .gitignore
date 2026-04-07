@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment files
+.env
+.env.local
+.env.render
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Markdown guides (generated docs, not source)
+COMPARISON.md
+COMPLETE_SUMMARY.md
+COPY_PASTE_REMAINING.md
+DEPLOYMENT_GUIDE.md
+FRONTEND_COMPONENTS_PART1.md
+FRONTEND_COMPONENTS_PART2.md
+IMPROVEMENT_SUMMARY.md
+LANDING_PAGE_GUIDE.md
+LAUNCH_GUIDE.md
+NEXTJS_CONVERSION_SUMMARY.md
+NEXTJS_README.md
+NEXTJS_SETUP_GUIDE.md
+PROJECT_COMPLETE.md
+QUICK_START.md
+README_COMPLETE.md
+READ_ME_FIRST.md
+SETUP_COMPLETE_SUMMARY.md
+START_HERE.md
+TRAINING_GUIDE.md
+
+# Batch scripts (Windows dev only)
+*.bat
+
+# Frontend dependencies
+frontend/node_modules/
+frontend/.next/
+
+# Large training dataset (training-only, 241 MB — not needed at runtime)
+unified_820_diseases_symptoms_dataset_ROWLEVEL_CLEANED.csv
+
+# Model binary tracked via Git LFS (see .gitattributes)
+# model/disease_model.pkl  ← handled by LFS, NOT ignored
