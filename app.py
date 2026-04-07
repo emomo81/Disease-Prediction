@@ -44,6 +44,11 @@ symptom_display.sort(key=lambda x: x["label"])
 
 
 @app.route("/")
+def landing():
+    return render_template("landing.html")
+
+
+@app.route("/app")
 def index():
     return render_template("index.html", symptoms=symptom_display)
 
